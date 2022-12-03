@@ -5,11 +5,7 @@ file=$1
 
 score=0
 while read line; do
-    line=$(tr ABCXYZ 123012 <<< $line)
-    a=${line:0:1}
-    b=${line:2:3}
-    ascore=$(bc <<< "($a + $b -1)%3" | tr 0 3)
-    score=$(($score+$ascore+3*$b))
+    score=$(tr ABCXYZ 123012 <<< $line | sed "s/\(.\) \(.\)/(\1+\2+1)%3+1+3*\2+$score/g" | bc)
 done < $file
 echo $score
 
